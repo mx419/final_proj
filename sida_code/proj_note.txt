@@ -1,0 +1,81 @@
+
+Module:
+1. visulaztionTool  没做成class
+a) 
+purpose: generate pie plot of gender and user type distribution
+
+function: pieplot(data, startyear, startmonth, endyear, endmonth, variable)
+
+return: pie plot
+
+b) 
+purpose: generate bar plot of daily usage or miles(use show_mile(T/F))
+
+function: plot_daily_freq(data, year, month, stat_type, show_mile)
+
+return: bar plot
+
+c)
+purpose: generate bar plot of cumulative usage from 2013-7 to user input date 
+function: cumulative_usage_plot(endyear,endmonth)
+return: bar plot
+
+d) 
+purpose: generate bar plot of cumulative #annual member from 2013-7 to user input date
+
+function: cumulative_annual_plot(endyear, endmonth)
+
+return: bar plot
+
+
+2. freq_station
+a)# Junchao might have a better one. check it
+purpose: helper function generate Station id as key, location and station name as value
+
+function: station_info(year, month, stat_type)
+
+return: dictionary
+
+b)
+purpose: generate list of high frequency station
+function: high_freq_station(year, month, stat_type, top_k)
+return: list
+
+
+#############################
+
+Functions:
+
+1. Daily usage(non-cumulative) 
+input: year, month
+output: bar plot
+
+2. daily usage(cumulative)
+input: endyear, end month
+output: bar plot
+
+3. miles traveled (daily)
+input: year, month
+output: bar plot
+
+
+4. annual member (cumulative)
+input: endyear, endmonth
+output: bar plot
+
+5. gender dist pie plot
+input: startdate, enddate
+output: pie plot
+
+6. user type dist pie plot
+input: startdate, enddate
+output: pie plot
+
+7. prediction based on historical
+input: date, station id
+output: recommendation text
+
+8. recommedation for closest station
+input: station id
+output: list of station name
+
