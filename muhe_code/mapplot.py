@@ -1,4 +1,7 @@
-'''This module contains a class to plot frequency results on the basemap'''
+'''
+This module contains a class to plot frequency results on the basemap, there methods are provided to draw frequecny map,
+draw  frequecny map of top k stations, draw heatmap
+'''
 
 import pandas as pd
 import numpy as np
@@ -55,7 +58,8 @@ class MapPlot(object):
 
     def draw_freq_map(self):
         plt.figure(figsize=(20,10))
-        plt.title('frequency distribution of citi bike stations in 2014.'+self.month) 
+        plt.title('Frequency Distribution of Citi Bike Stations in 2014.'+self.month) 
+        #range of map
         map = Basemap(projection='merc', resolution = 'i',  area_thresh = 0.1,llcrnrlon=-74.04, llcrnrlat= 40.68,urcrnrlon= -73.937599, urcrnrlat=40.7705)
         map.drawcoastlines(color = 'r')
         map.drawcountries(color = 'aqua')
@@ -85,6 +89,7 @@ class MapPlot(object):
         x2,y2 = map(self.longs,self.lats)
         for i in top_k_index:
             map.plot(x2[i], y2[i], marker = 'o',color = self.get_color_tuple(self.freqs_list[i]),markersize=14,zorder = 1)
+ 
             plt.text(x2[i]+200, y2[i], self.dots.ix[i]['name'],fontsize = 7)
         # 2 points as legend
         legend_high_x,legend_high_y = map(-74.036,40.7685)
@@ -95,8 +100,69 @@ class MapPlot(object):
         plt.text(legend_low_x+300, legend_low_y-100, 'Low Freq',fontsize=12)
         plt.show()
         
+    def draw_heat_map(self):
+        plt.figure(figsize=(20,10))
+        plt.title('Heat Map of Citi Bike Stations in 2014.'+self.month) 
+        map = Basemap(projection='merc', resolution = 'i',  area_thresh = 0.1,llcrnrlon=-74.04, llcrnrlat= 40.68,urcrnrlon= -73.937599, urcrnrlat=40.7705)
+        
+        map.drawcoastlines(color = 'r')
+        map.drawcountries(color = 'aqua')
+        map.drawmapboundary(zorder=0)
 
+        x2,y2 = map(self.longs,self.lats)
+        for i in range(len(x2)):
+            map.plot(x2[i], y2[i], marker = 'o',color = self.get_color_tuple(self.freqs_list[i]),markersize=7,zorder = 1)
+
+        ny = 20 #number of vertical grids for heat map
+        x_range =  max(self.longs) - min(self.longs)
+        y_range =  max(self.lats) - min(self.lats)
+        y_step = y_range/float(ny) #height of grid
+        ratio = x_range/y_range
+        nx = int(ny*ratio) #number of horizonal grids for heat map
+        x_step = x_range/float(nx) #width of grid
+
+
+        # compute appropriate bins to histogram the data into
+        lon_bins = np.linspace(min(self.longs), max(self.longs), nx+1)
+        lat_bins = np.linspace(min(self.lats), max(self.lats), ny+1)
+
+        density_matrix = np.ones((ny,nx))
+        #get the freqency density matrix 
+        for i in range(ny):
+            for j in range(nx):
+                x_upper_left,y_upper_left = self.get_locaion_by_row_column_index(i,j,min(self.longs),max(self.lats),x_step,y_step)
+                density_matrix[i][j] = self.get_freq_by_location(x_upper_left,x_upper_left+x_step,y_upper_left-y_step,y_upper_left,min(self.freqs_list),self.longs,self.lats,self.freqs_list,x_step,y_step)
+                
+        
+        lon_bins_2d, lat_bins_2d = np.meshgrid(lon_bins, lat_bins)
+        xs, ys = map(lon_bins_2d, lat_bins_2d) 
+
+        plt.pcolormesh(xs, ys, np.flipud(density_matrix),alpha = 1)
+        plt.colorbar(orientation='vertical')
+
+        plt.show()
+
+
+
+
+
+
+    def get_freq_by_location(self,long_start,long_end,lat_start,lat_end,lowest_freq,longs,lats,freqs,x_step,y_step):
+        #this function will get the max frequecy in the given zone
+        freq_sum = 0
+        n_count = 0
+        freq_max = lowest_freq
+        for index_i in range(len(longs)):
+            if longs[index_i]>= long_start and longs[index_i]<= long_end and lats[index_i]>= lat_start  and lats[index_i]<= lat_end:
+                if freq_max < freqs[index_i]:
+                    freq_max = freqs[index_i]
+        return freq_max
+
+    def get_locaion_by_row_column_index(self,row_index,column_index,long_start,lat_end,x_step,y_step):
+        #this function will get the range of a grid by the row and column index
+        x_upper_left = long_start+column_index*x_step
+        y_upper_left =lat_end - row_index*y_step
+        return x_upper_left,y_upper_left
     
-
-
+    
 

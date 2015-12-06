@@ -33,6 +33,7 @@ while True:
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             obj.draw_freq_map()
-            #obj.draw_top_k_freq_map(3)
+            obj.draw_top_k_freq_map(3)
+            obj.draw_heat_map()
     else:
        break
