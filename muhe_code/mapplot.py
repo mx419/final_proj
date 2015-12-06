@@ -16,15 +16,23 @@ import matplotlib.pyplot as plt
 class MapPlot(object):
     '''this class contains methods to visualize the station location data and frequency data on the map
     '''
-    def __init__(self,longs,lats,freqs):
-        self.longs = longs
-        self.lats = lats
-        self.freqs = freqs
-        self.v_max = freqs.max()
-        self.v_min = freqs.min()
-        self.v_median = freqs.median()
+    #def __init__(self,longs,lats,freqs):
+    def __init__(self,dots,month):
+        self.dots = dots
+        longs = dots['long']
+        longs = longs.tolist()
+        self.longs = [float(x) for x in longs]
+        lats = dots['lat']
+        lats = lats.tolist()
+        self.lats = [float(x) for x in lats]
+        self.freqs = dots['freq']
+        self.v_max = self.freqs.max()
+        self.v_min = self.freqs.min()
+        self.v_median = self.freqs.median()
         self.freqs_list = self.freqs.tolist()
-        pass
+        self.month = str(month)
+
+        
 
     def get_red_color(self,maxvalue,minimunvalue,this_value):
         #get the red distribution in the rgb color
@@ -46,6 +54,8 @@ class MapPlot(object):
             return (a,a,1)
 
     def draw_freq_map(self):
+        plt.figure(figsize=(20,10))
+        plt.title('frequency distribution of citi bike stations in 2014.'+self.month) 
         map = Basemap(projection='merc', resolution = 'i',  area_thresh = 0.1,llcrnrlon=-74.04, llcrnrlat= 40.68,urcrnrlon= -73.937599, urcrnrlat=40.7705)
         map.drawcoastlines(color = 'r')
         map.drawcountries(color = 'aqua')
@@ -53,9 +63,38 @@ class MapPlot(object):
 
         x2,y2 = map(self.longs,self.lats)
         for i in range(len(x2)):
-            map.plot(x2[i], y2[i], marker = 'o',color = self.get_color_tuple(self.freqs_list[i]),markersize=10,zorder = 1)
-
+            map.plot(x2[i], y2[i], marker = 'o',color = self.get_color_tuple(self.freqs_list[i]),markersize=16,zorder = 1)
+        # 2 points as legend
+        legend_high_x,legend_high_y = map(-74.036,40.7685)
+        legend_low_x,legend_low_y = map(-74.036,40.763)
+        map.plot(legend_high_x,legend_high_y,marker = 'o',color = (1,0,0),markersize=20,zorder = 1)
+        map.plot(legend_low_x,legend_low_y,marker = 'o',color = (0,0,1),markersize=20,zorder = 1)
+        plt.text(legend_high_x+300, legend_high_y-100, 'High Freq',fontsize=12)
+        plt.text(legend_low_x+300, legend_low_y-100, 'Low Freq',fontsize=12)
         plt.show()
+
+    def draw_top_k_freq_map(self,k):
+        top_k_index = self.dots.sort('freq',ascending=False)[:k].index
+        plt.figure(figsize=(20,10))
+        plt.title('Top '+str(k)+' frequency citi bike stations in 2014.'+self.month) 
+        map = Basemap(projection='merc', resolution = 'i',  area_thresh = 0.1,llcrnrlon=-74.04, llcrnrlat= 40.68,urcrnrlon= -73.937599, urcrnrlat=40.7705)
+        map.drawcoastlines(color = 'r')
+        map.drawcountries(color = 'aqua')
+        map.drawmapboundary(zorder=0)
+
+        x2,y2 = map(self.longs,self.lats)
+        for i in top_k_index:
+            map.plot(x2[i], y2[i], marker = 'o',color = self.get_color_tuple(self.freqs_list[i]),markersize=14,zorder = 1)
+            plt.text(x2[i]+200, y2[i], self.dots.ix[i]['name'],fontsize = 7)
+        # 2 points as legend
+        legend_high_x,legend_high_y = map(-74.036,40.7685)
+        legend_low_x,legend_low_y = map(-74.036,40.763)
+        map.plot(legend_high_x,legend_high_y,marker = 'o',color = (1,0,0),markersize=20,zorder = 1)
+        map.plot(legend_low_x,legend_low_y,marker = 'o',color = (0,0,1),markersize=20,zorder = 1)
+        plt.text(legend_high_x+300, legend_high_y-100, 'High Freq',fontsize=12)
+        plt.text(legend_low_x+300, legend_low_y-100, 'Low Freq',fontsize=12)
+        plt.show()
+        
 
     
 

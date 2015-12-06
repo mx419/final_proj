@@ -7,7 +7,7 @@ import warnings
 
 #this only used for try by my self
 
-dots = pd.read_csv('../loc_freq.csv')
+dots = pd.read_csv('loc_freq.csv')
 dots=dots.drop(301)
 freqs = dots['freq'].tolist()
 #get longitudes
@@ -24,7 +24,8 @@ v_min = dots['freq'].min()
 v_median = dots['freq'].median()
 
 
-obj = mapplot.MapPlot(longs,lats,dots['freq'])
+#obj = mapplot.MapPlot(longs,lats,dots['freq'])
+obj = mapplot.MapPlot(dots,3)
 
 while True:
     a = raw_input('?')
@@ -32,5 +33,6 @@ while True:
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             obj.draw_freq_map()
+            #obj.draw_top_k_freq_map(3)
     else:
        break
