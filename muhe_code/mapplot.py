@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 #author: Muhe Xie
 #netID: mx419
-#date: 11/16/2015
+#date: 12/05/2015
 
 #to be done next: 
 #1 show most used station points station name text and locations
@@ -56,6 +56,7 @@ class MapPlot(object):
             map.plot(x2[i], y2[i], marker = 'o',color = self.get_color_tuple(self.freqs_list[i]),markersize=10,zorder = 1)
 
         plt.show()
+
     
 
 
