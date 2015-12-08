@@ -23,9 +23,10 @@ v_max = dots['freq'].max()
 v_min = dots['freq'].min()
 v_median = dots['freq'].median()
 
+dots22 = pd.read_csv('1007 data/freq_201408.csv')
 
 #obj = mapplot.MapPlot(longs,lats,dots['freq'])
-obj = mapplot.MapPlot(dots,3)
+obj = mapplot.MapPlot(dots22,3)
 
 while True:
     a = raw_input('?')
