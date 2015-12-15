@@ -1,9 +1,9 @@
 import pickle
-from motionless import DecoratedMap
-from motionless import AddressMarker
-import string
-import urllib
-from PIL import Image
+# from motionless import DecoratedMap
+# from motionless import AddressMarker
+# import string
+# import urllib
+# from PIL import Image
 
 '''to merge with other teammates'''
 
@@ -54,13 +54,13 @@ def RepresentsInt(s):
         return False
 
 
-def show_map(topk_list):
-    letter_list = list(string.ascii_uppercase)
-    dmap = DecoratedMap()
+# def show_map(topk_list):
+#     letter_list = list(string.ascii_uppercase)
+#     dmap = DecoratedMap()
 
-    for i,loc in enumerate(topk_list):
-        dmap.add_marker(AddressMarker('{}, New York, ny'.format(loc),label='{}'.format(letter_list[i])))
+#     for i,loc in enumerate(topk_list):
+#         dmap.add_marker(AddressMarker('{}, New York, ny'.format(loc),label='{}'.format(letter_list[i])))
 
-    urllib.urlretrieve(dmap.generate_url(), 'image.jpg')
-    image = Image.open('image.jpg')
-    image.show()
+#     urllib.urlretrieve(dmap.generate_url(), 'image.jpg')
+#     image = Image.open('image.jpg')
+#     image.show()

@@ -20,7 +20,7 @@ class MapPlot(object):
     '''this class contains methods to visualize the station location data and frequency data on the map
     '''
     #def __init__(self,longs,lats,freqs):
-    def __init__(self,dots,month):
+    def __init__(self,dots,month,year):
         self.dots = dots
         longs = dots['long']
         longs = longs.tolist()
@@ -34,6 +34,7 @@ class MapPlot(object):
         self.v_median = self.freqs.median()
         self.freqs_list = self.freqs.tolist()
         self.month = str(month)
+        self.year = str(year)
 
         
 
@@ -58,7 +59,7 @@ class MapPlot(object):
 
     def draw_freq_map(self):
         plt.figure(figsize=(20,10))
-        plt.title('Frequency Distribution of Citi Bike Stations in 2014.'+self.month) 
+        plt.title('Frequency Distribution of Citi Bike Stations in ' +self.year+'.'+self.month) 
         #range of map
         map = Basemap(projection='merc', resolution = 'i',  area_thresh = 0.1,llcrnrlon=-74.04, llcrnrlat= 40.68,urcrnrlon= -73.937599, urcrnrlat=40.7705)
         map.drawcoastlines(color = 'r')
@@ -80,7 +81,7 @@ class MapPlot(object):
     def draw_top_k_freq_map(self,k):
         top_k_index = self.dots.sort('freq',ascending=False)[:k].index
         plt.figure(figsize=(20,10))
-        plt.title('Top '+str(k)+' frequency citi bike stations in 2014.'+self.month) 
+        plt.title('Top '+str(k)+' frequency citi bike stations in '+ self.year+'.'+self.month) 
         map = Basemap(projection='merc', resolution = 'i',  area_thresh = 0.1,llcrnrlon=-74.04, llcrnrlat= 40.68,urcrnrlon= -73.937599, urcrnrlat=40.7705)
         map.drawcoastlines(color = 'r')
         map.drawcountries(color = 'aqua')
@@ -102,7 +103,7 @@ class MapPlot(object):
         
     def draw_heat_map(self):
         plt.figure(figsize=(20,10))
-        plt.title('Heat Map of Citi Bike Stations in 2014.'+self.month) 
+        plt.title('Heat Map of Citi Bike Stations in '+self.year+'.'+self.month) 
         map = Basemap(projection='merc', resolution = 'i',  area_thresh = 0.1,llcrnrlon=-74.04, llcrnrlat= 40.68,urcrnrlon= -73.937599, urcrnrlat=40.7705)
         
         map.drawcoastlines(color = 'r')
